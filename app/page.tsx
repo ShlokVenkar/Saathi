@@ -14,7 +14,7 @@ import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { DemoSwitcher } from '@/components/layout/DemoSwitcher';
 import { PwaInstallBanner } from '@/components/common/PwaInstallBanner';
 import { SosModal } from '@/components/senior/SosModal';
-import { Smartphone, ArrowLeft } from 'lucide-react';
+import { Smartphone } from 'lucide-react';
 
 export type SeniorViewType = 'home' | 'checkin' | 'family' | 'services' | 'explainer' | 'requests';
 
@@ -24,10 +24,10 @@ export default function HomePage() {
   const [isSosOpen, setIsSosOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100/70 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-slate-100 selection:bg-blue-100 selection:text-blue-900">
       {/* Top Banner when in non-Senior mode (Family / Hardware / Admin) with one-click return */}
       {currentRole !== 'senior' && (
-        <div className="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm font-bold border-b border-slate-800">
+        <div className="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm font-bold border-b border-slate-800 shrink-0">
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded font-mono uppercase text-xs">
               JUDGE / DEMO MODE: {currentRole.toUpperCase()}
@@ -45,7 +45,7 @@ export default function HomePage() {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full animate-fade-in">
+      <main className="flex-1 w-full max-w-full overflow-x-hidden animate-fade-in">
         {/* SENIOR CITIZEN EXPERIENCE (Clean, Single App Feel) */}
         {currentRole === 'senior' && (
           <>
