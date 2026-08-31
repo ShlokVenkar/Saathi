@@ -21,14 +21,14 @@ interface SeniorDailyCheckInProps {
 }
 
 export const SeniorDailyCheckIn: React.FC<SeniorDailyCheckInProps> = ({ onBack, onTriggerSos }) => {
-  const { senior, checkIn, performCheckIn, resetCheckIn, tSenior, readAloud } = useSaathi();
+  const { senior, checkIn, submitCheckIn, resetCheckIn, tSenior, readAloud } = useSaathi();
   const [justCompleted, setJustCompleted] = useState(false);
 
   const isCompleted = checkIn.status === 'COMPLETED' || justCompleted;
   const PRIYA_PHONE = '918591598630';
 
   const handleImOk = () => {
-    performCheckIn('I am doing fine today. Everything is good.');
+    submitCheckIn('GOOD');
     setJustCompleted(true);
 
     try {

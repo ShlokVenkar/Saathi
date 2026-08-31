@@ -15,11 +15,10 @@ import {
   Car,
   Volume2,
   ExternalLink,
-  RefreshCw,
   Sparkles
 } from 'lucide-react';
 import { ServiceCategory, ServiceLocation } from '@/types';
-import { INITIAL_NEARBY_SERVICES } from '@/data/mockData';
+import { MOCK_SERVICES } from '@/data/mockData';
 
 interface NearbyServicesProps {
   onBack: () => void;
@@ -27,12 +26,11 @@ interface NearbyServicesProps {
 
 const CATEGORY_TABS: Array<{ id: ServiceCategory | 'ALL'; label: string; icon: React.ElementType; mapQuery: string }> = [
   { id: 'ALL', label: 'सर्व (All)', icon: Sparkles, mapQuery: 'emergency services near me' },
-  { id: 'HOSPITAL', label: '🏥 दवाखाने (Hospitals)', icon: Hospital, mapQuery: 'hospitals near me' },
-  { id: 'PHARMACY', label: '💊 औषध दुकाने (Pharmacy)', icon: Pill, mapQuery: 'pharmacy near me' },
-  { id: 'AMBULANCE', label: '🚑 रुग्णवाहिका (Ambulance)', icon: Siren, mapQuery: 'ambulance near me' },
-  { id: 'POLICE', label: '👮 पोलीस (Police)', icon: Shield, mapQuery: 'police station near me' },
-  { id: 'CARE_CENTER', label: '🏠 ज्येष्ठ नागरिक केंद्र (Senior Care)', icon: HeartHandshake, mapQuery: 'senior care center near me' },
-  { id: 'TRANSPORT', label: '🚕 वाहतूक (Transport)', icon: Car, mapQuery: 'auto taxi stand near me' },
+  { id: 'hospitals', label: '🏥 दवाखाने (Hospitals)', icon: Hospital, mapQuery: 'hospitals near me' },
+  { id: 'pharmacy', label: '💊 औषध दुकाने (Pharmacy)', icon: Pill, mapQuery: 'pharmacy near me' },
+  { id: 'ambulance', label: '🚑 रुग्णवाहिका (Ambulance)', icon: Siren, mapQuery: 'ambulance near me' },
+  { id: 'senior_centres', label: '🏠 ज्येष्ठ नागरिक केंद्र (Senior Care)', icon: HeartHandshake, mapQuery: 'senior care center near me' },
+  { id: 'transport', label: '🚕 वाहतूक (Transport)', icon: Car, mapQuery: 'auto taxi stand near me' },
 ];
 
 export const NearbyServices: React.FC<NearbyServicesProps> = ({ onBack }) => {
@@ -67,8 +65,8 @@ export const NearbyServices: React.FC<NearbyServicesProps> = ({ onBack }) => {
   }, [senior]);
 
   const filteredServices = activeCategory === 'ALL'
-    ? INITIAL_NEARBY_SERVICES
-    : INITIAL_NEARBY_SERVICES.filter(s => s.category === activeCategory);
+    ? MOCK_SERVICES
+    : MOCK_SERVICES.filter(s => s.category === activeCategory);
 
   const currentTabInfo = CATEGORY_TABS.find(t => t.id === activeCategory) || CATEGORY_TABS[0];
 
@@ -188,7 +186,7 @@ export const NearbyServices: React.FC<NearbyServicesProps> = ({ onBack }) => {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between gap-2">
                   <span className="px-3 py-1 bg-blue-100 text-blue-900 rounded-full text-xs font-black uppercase">
-                    {svc.category}
+                    {svc.category.replace('_', ' ')}
                   </span>
                   <span className="text-sm font-black text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                     📍 {svc.distanceKm} किमी अंतरावर
@@ -198,7 +196,6 @@ export const NearbyServices: React.FC<NearbyServicesProps> = ({ onBack }) => {
                 <h3 className="text-2xl font-black text-slate-900 pt-1">
                   {svc.name}
                 </h3>
-                <p className="text-xs text-slate-500 font-bold">{svc.nameEn}</p>
                 <p className="text-sm text-slate-600 font-medium pt-1">
                   {svc.address}
                 </p>
@@ -215,7 +212,7 @@ export const NearbyServices: React.FC<NearbyServicesProps> = ({ onBack }) => {
                 </a>
 
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(svc.nameEn + ' ' + svc.address)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(svc.name + ' ' + svc.address)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-black text-base flex items-center justify-center gap-2 shadow-sm active:scale-95"
