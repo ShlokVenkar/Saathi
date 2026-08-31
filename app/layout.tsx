@@ -21,7 +21,8 @@ export const viewport: Viewport = {
   themeColor: '#0f172a',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -30,13 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="mr" className="h-full">
+    <html lang="mr" className="h-full overflow-x-hidden">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="stylesheet" href="/output.css" />
         <meta name="theme-color" content="#0f172a" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-100 text-slate-900 overflow-x-hidden">
+      <body className="min-h-full w-full max-w-full overflow-x-hidden flex flex-col bg-slate-100 text-slate-900">
         <SaathiProvider>
           {children}
         </SaathiProvider>
