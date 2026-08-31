@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" rx="40" fill="#0f172a"/>
+  <circle cx="96" cy="96" r="68" fill="#1e3a8a" stroke="#3b82f6" stroke-width="4"/>
+  <!-- Heart and Hands Motif -->
+  <path d="M96 134 C70 110, 52 94, 52 74 C52 58, 64 48, 78 48 C86 48, 92 52, 96 58 C100 52, 106 48, 114 48 C128 48, 140 58, 140 74 C140 94, 122 110, 96 134 Z" fill="#dc2626"/>
+  <path d="M72 144 L120 144" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+</svg>
