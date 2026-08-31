@@ -17,14 +17,14 @@ export const INITIAL_SENIOR: SeniorProfile = {
   latitude: 18.5074,
   longitude: 73.8077,
   primaryCaregiverName: 'Priya Sharma (Daughter)',
-  primaryCaregiverPhone: '+91 98765 43210',
+  primaryCaregiverPhone: '+91 8591598630',
   medicalNotes: 'Hypertension, Mild arthritis in knees, daily blood pressure pill at 9:00 AM',
   emergencyContacts: [
     {
       id: 'ec-1',
       name: 'Priya Sharma (Daughter)',
       relationship: 'Daughter / Primary Caregiver',
-      phone: '+91 98765 43210',
+      phone: '+91 8591598630',
       isPrimary: true,
       type: 'family'
     },
@@ -66,7 +66,7 @@ export const INITIAL_SENIOR: SeniorProfile = {
 export const INITIAL_CAREGIVER: CaregiverProfile = {
   id: 'caregiver-priya-1',
   name: 'Priya Sharma',
-  phone: '+91 98765 43210',
+  phone: '+91 8591598630',
   language: 'en', // English by default for caregiver
   relationship: 'Daughter',
   linkedSeniorId: 'senior-raj-1'

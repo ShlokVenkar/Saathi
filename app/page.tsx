@@ -5,9 +5,10 @@ import { useSaathi } from '@/context/SaathiContext';
 import { SeniorHome } from '@/components/senior/SeniorHome';
 import { SeniorDailyCheckIn } from '@/components/senior/SeniorDailyCheckIn';
 import { SeniorFamilyContact } from '@/components/senior/SeniorFamilyContact';
+import { SeniorAiCompanion } from '@/components/senior/SeniorAiCompanion';
+import { SeniorDevotional } from '@/components/senior/SeniorDevotional';
 import { SeniorRequestsView } from '@/components/senior/SeniorRequestsView';
 import { NearbyServices } from '@/components/services/NearbyServices';
-import { DocumentExplainer } from '@/components/explainer/DocumentExplainer';
 import { FamilyDashboard } from '@/components/family/FamilyDashboard';
 import { HardwareSimulator } from '@/components/hardware/HardwareSimulator';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
@@ -16,7 +17,7 @@ import { PwaInstallBanner } from '@/components/common/PwaInstallBanner';
 import { SosModal } from '@/components/senior/SosModal';
 import { Smartphone } from 'lucide-react';
 
-export type SeniorViewType = 'home' | 'checkin' | 'family' | 'services' | 'explainer' | 'requests';
+export type SeniorViewType = 'home' | 'checkin' | 'family' | 'companion' | 'devotional' | 'services' | 'requests';
 
 export default function HomePage() {
   const { currentRole, setCurrentRole } = useSaathi();
@@ -53,6 +54,17 @@ export default function HomePage() {
               <SeniorHome onNavigate={(v) => setSeniorView(v)} />
             )}
 
+            {seniorView === 'companion' && (
+              <SeniorAiCompanion 
+                onBack={() => setSeniorView('home')} 
+                onNavigate={(v) => setSeniorView(v)}
+              />
+            )}
+
+            {seniorView === 'devotional' && (
+              <SeniorDevotional onBack={() => setSeniorView('home')} />
+            )}
+
             {seniorView === 'checkin' && (
               <SeniorDailyCheckIn 
                 onBack={() => setSeniorView('home')} 
@@ -68,10 +80,6 @@ export default function HomePage() {
               <NearbyServices onBack={() => setSeniorView('home')} />
             )}
 
-            {seniorView === 'explainer' && (
-              <DocumentExplainer onBack={() => setSeniorView('home')} />
-            )}
-
             {seniorView === 'requests' && (
               <SeniorRequestsView onBack={() => setSeniorView('home')} />
             )}
@@ -84,7 +92,7 @@ export default function HomePage() {
         {/* FAMILY CAREGIVER DASHBOARD */}
         {currentRole === 'family' && <FamilyDashboard />}
 
-        {/* HARDWARE GESTURE & SENSOR SIMULATOR */}
+        {/* HARDWARE GESTURE & SENSOR SIMULATOR (PROTECTED BHAVESH'S WORK) */}
         {currentRole === 'hardware' && <HardwareSimulator />}
 
         {/* ADMIN & DEVICE REGISTRY */}
