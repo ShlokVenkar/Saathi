@@ -33,9 +33,10 @@ export default function RootLayout({
     <html lang="mr" className="h-full">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="stylesheet" href="/output.css" />
         <meta name="theme-color" content="#0f172a" />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+      <body className="min-h-full flex flex-col bg-slate-100 text-slate-900 overflow-x-hidden">
         <SaathiProvider>
           {children}
         </SaathiProvider>
