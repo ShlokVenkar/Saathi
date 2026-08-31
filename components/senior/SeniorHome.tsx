@@ -7,31 +7,28 @@ import {
   Utensils, 
   CupSoda, 
   Pill, 
-  Footprints, 
   HeartHandshake, 
   Users, 
   FileText, 
   MapPin, 
   CheckCircle2, 
-  Cpu, 
   Volume2, 
-  PhoneCall, 
   Activity,
   Sparkles,
-  Languages
+  X,
+  ArrowRight,
+  ShieldAlert
 } from 'lucide-react';
 import { SosModal } from './SosModal';
-import { CheckInModal } from './CheckInModal';
-import { SeniorRequestsModal } from './SeniorRequestsModal';
-import { SeniorDeviceModal } from './SeniorDeviceModal';
-import { Language, RequestType } from '@/types';
+import { Language, RequestItem, RequestType } from '@/types';
 import { LANGUAGE_NAMES } from '@/lib/i18n';
+import { requestService } from '@/services/requestService';
 
 interface SeniorHomeProps {
-  onNavigateTab?: (tab: 'services' | 'explainer') => void;
+  onNavigate: (view: 'checkin' | 'family' | 'services' | 'explainer' | 'requests') => void;
 }
 
-export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
+export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigate }) => {
   const { 
     senior, 
     seniorLang, 
@@ -43,10 +40,7 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
   } = useSaathi();
 
   const [isSosOpen, setIsSosOpen] = useState(false);
-  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
-  const [isRequestsOpen, setIsRequestsOpen] = useState(false);
-  const [isDeviceOpen, setIsDeviceOpen] = useState(false);
-  const [lastActionToast, setLastActionToast] = useState<string | null>(null);
+  const [activeConfirmationReq, setActiveConfirmationReq] = useState<RequestItem | null>(null);
 
   // Time-of-day greeting
   const getGreeting = () => {
@@ -58,19 +52,21 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
   };
 
   const handleQuickRequest = (type: RequestType) => {
-    createRequest(type, 'APP');
+    const req = createRequest(type, 'APP');
+    setActiveConfirmationReq(req);
     const label = tSenior(`requests.${type}`);
-    const toastMsg = `${label} (${tSenior('requests.requestSentSuccess')})`;
-    setLastActionToast(toastMsg);
+    const toastMsg = `${label}. ${tSenior('requests.requestSentToast')}`;
     readAloud(toastMsg);
+  };
 
-    setTimeout(() => {
-      setLastActionToast(null);
-    }, 4000);
+  const handleCancelAccidental = (requestId: string) => {
+    requestService.cancelRequest(requestId);
+    setActiveConfirmationReq(null);
+    readAloud(tSenior('requests.statusCancelled'));
   };
 
   const handleReadScreen = () => {
-    const greeting = `${getGreeting()}, ${senior.name}. ${tSenior('seniorHome.quickRequestsTitle')}`;
+    const greeting = `${getGreeting()}, ${senior.name.split(' ')[0]}. ${senior.locationName}. ${tSenior('seniorHome.quickRequestsTitle')}`;
     readAloud(greeting);
   };
 
@@ -78,51 +74,52 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-4 sm:py-6 space-y-6 pb-28">
-      {/* Top Header with Senior Greeting & Language Switcher */}
-      <header className="bg-white rounded-3xl p-5 sm:p-6 shadow-md border-2 border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-black uppercase tracking-wider text-blue-900 bg-blue-100 px-3 py-1 rounded-full">
-              {tSenior('common.appName')}
+      {/* Top Header: Brand, Greeting, Language Selector, and Speaker */}
+      <header className="bg-white rounded-3xl p-5 sm:p-7 shadow-md border-3 border-slate-200 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight block">
+              {tSenior('seniorHome.title')}
             </span>
-            {isCheckInCompleted && (
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                {tSenior('checkin.familyStatusCompleted')}
-              </span>
-            )}
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-blue-700">
+              {tSenior('seniorHome.subtitle')}
+            </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            {getGreeting()}, <span className="text-blue-900">{senior.name.split(' ')[0]}</span>
-          </h1>
-          <p className="text-base text-slate-600 font-medium">{senior.locationName}</p>
-        </div>
 
-        {/* Action Pills: Speech & Language */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-          {/* Read Aloud Button */}
+          {/* Large Speaker / "ऐका" Button */}
           <button
             type="button"
             onClick={handleReadScreen}
-            className="p-3 bg-blue-50 text-blue-900 hover:bg-blue-100 rounded-2xl flex items-center gap-2 border border-blue-200 font-bold active:scale-95 transition-all text-sm"
+            className="px-4 py-3 bg-blue-100 hover:bg-blue-200 text-blue-950 rounded-2xl flex items-center gap-2 border-2 border-blue-300 font-black active:scale-95 transition-all text-base shadow-sm"
             aria-label="Read Screen Aloud"
-            title="Read screen text aloud"
           >
-            <Volume2 className="w-5 h-5 text-blue-700" />
+            <Volume2 className="w-6 h-6 text-blue-800" />
             <span>{tSenior('common.readAloud')}</span>
           </button>
+        </div>
 
-          {/* Language Selector for Senior */}
-          <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200">
+        {/* Greeting & Location */}
+        <div className="pt-1 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              {getGreeting()}, <span className="text-blue-900">{senior.name.split(' ')[0]}</span>
+            </h1>
+            <p className="text-lg text-slate-600 font-bold mt-0.5">
+              📍 {senior.locationName}
+            </p>
+          </div>
+
+          {/* Obvious Language Selector */}
+          <div className="flex bg-slate-100 p-1.5 rounded-2xl border-2 border-slate-300 self-start sm:self-auto">
             {(['mr', 'hi', 'en'] as Language[]).map((lang) => (
               <button
                 key={lang}
                 type="button"
                 onClick={() => setSeniorLanguage(lang)}
-                className={`px-3 py-2 rounded-xl text-sm font-black transition-all ${
+                className={`px-3.5 py-2 rounded-xl text-base font-black transition-all ${
                   seniorLang === lang
-                    ? 'bg-blue-900 text-white shadow-md'
-                    : 'text-slate-700 hover:text-slate-900'
+                    ? 'bg-blue-900 text-white shadow-md scale-105'
+                    : 'text-slate-700 hover:text-slate-950'
                 }`}
               >
                 {LANGUAGE_NAMES[lang].native}
@@ -132,15 +129,53 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
         </div>
       </header>
 
-      {/* Action Toast Notification */}
-      {lastActionToast && (
-        <div className="p-4 bg-emerald-600 text-white font-black text-lg sm:text-xl rounded-2xl shadow-xl flex items-center gap-3 animate-bounce border-2 border-emerald-400">
-          <CheckCircle2 className="w-7 h-7 text-emerald-200 shrink-0" />
-          <span>{lastActionToast}</span>
+      {/* Confirmation Modal if Request Triggered (Avoid accidental taps) */}
+      {activeConfirmationReq && (
+        <div className="bg-emerald-600 text-white rounded-3xl p-6 sm:p-7 shadow-2xl border-4 border-emerald-400 space-y-4 animate-scale-up">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-700 rounded-2xl text-emerald-100">
+                <CheckCircle2 className="w-9 h-9" />
+              </div>
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-black">
+                  {tSenior(`requests.${activeConfirmationReq.type}`)}
+                </h3>
+                <p className="text-base sm:text-lg text-emerald-100 font-bold">
+                  {tSenior('requests.requestSentToast')}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveConfirmationReq(null)}
+              className="p-2 text-emerald-200 hover:text-white rounded-full"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-emerald-500">
+            <button
+              type="button"
+              onClick={() => handleCancelAccidental(activeConfirmationReq.id)}
+              className="px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-emerald-100 rounded-xl font-bold text-sm sm:text-base flex items-center gap-2 border border-emerald-400 active:scale-95"
+            >
+              <X className="w-5 h-5 text-rose-300" />
+              <span>{tSenior('requests.cancelAccidental')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveConfirmationReq(null)}
+              className="px-5 py-2.5 bg-white text-emerald-950 rounded-xl font-black text-sm sm:text-base shadow active:scale-95"
+            >
+              {tSenior('common.close')}
+            </button>
+          </div>
         </div>
       )}
 
-      {/* MOST IMPORTANT: BIG RED SOS BUTTON */}
+      {/* MOST IMPORTANT: HUGE RED EMERGENCY BUTTON */}
       <section aria-label="Emergency SOS Action">
         <button
           type="button"
@@ -149,8 +184,8 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
           id="senior-sos-button"
         >
           <div className="flex items-center gap-4 text-left">
-            <div className="p-4 bg-red-700/80 rounded-2xl group-hover:scale-110 transition-transform shrink-0 border-2 border-red-400">
-              <AlertTriangle className="w-10 h-10 sm:w-12 sm:h-12 text-white animate-pulse" />
+            <div className="p-4 bg-red-700 rounded-2xl group-hover:scale-110 transition-transform shrink-0 border-2 border-red-400">
+              <AlertTriangle className="w-11 h-11 sm:w-14 sm:h-14 text-white animate-pulse" />
             </div>
             <div>
               <span className="block text-2xl sm:text-4xl font-black tracking-tight drop-shadow-sm">
@@ -161,129 +196,107 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
               </span>
             </div>
           </div>
-          <span className="hidden sm:inline-block px-4 py-2 bg-red-800 rounded-2xl text-red-100 font-black text-lg shrink-0">
-            EMERGENCY
-          </span>
         </button>
       </section>
 
-      {/* QUICK ASSISTANCE CARDS (Hungry, Thirsty, Medicine, Washroom, Pain, Family) */}
-      <section className="space-y-3" aria-label="Quick Needs">
-        <h2 className="text-xl sm:text-2xl font-black text-slate-800 px-1 flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-amber-500" />
+      {/* MAIN SENIOR ACTIONS (Hungry, Thirsty, Medicine, Pain, Family) */}
+      <section className="space-y-4" aria-label="Direct Assistance Requests">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 px-1 flex items-center gap-2">
+          <Sparkles className="w-7 h-7 text-amber-500" />
           {tSenior('seniorHome.quickRequestsTitle')}
         </h2>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          {/* Hungry */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 1. Hungry */}
           <button
             type="button"
             onClick={() => handleQuickRequest('HUNGRY')}
-            className="p-5 sm:p-6 bg-amber-50 hover:bg-amber-100 border-3 border-amber-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex flex-col justify-between min-h-[140px] group"
+            className="p-6 bg-amber-50 hover:bg-amber-100 border-4 border-amber-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-4 group"
           >
-            <div className="p-3 bg-amber-200 rounded-2xl w-fit text-amber-900 group-hover:scale-110 transition-transform">
-              <Utensils className="w-8 h-8" />
+            <div className="p-4 bg-amber-200 text-amber-950 rounded-2xl text-4xl group-hover:scale-110 transition-transform shrink-0">
+              🍛
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black text-amber-950 block">
+              <span className="text-2xl sm:text-3xl font-black text-amber-950 block">
                 {tSenior('requests.HUNGRY')}
               </span>
-              <span className="text-xs sm:text-sm text-amber-800 font-bold block mt-0.5">
+              <span className="text-base text-amber-900 font-bold block mt-1">
                 {tSenior('requests.HUNGRY_desc')}
               </span>
             </div>
           </button>
 
-          {/* Thirsty */}
+          {/* 2. Thirsty */}
           <button
             type="button"
             onClick={() => handleQuickRequest('THIRSTY')}
-            className="p-5 sm:p-6 bg-cyan-50 hover:bg-cyan-100 border-3 border-cyan-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex flex-col justify-between min-h-[140px] group"
+            className="p-6 bg-cyan-50 hover:bg-cyan-100 border-4 border-cyan-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-4 group"
           >
-            <div className="p-3 bg-cyan-200 rounded-2xl w-fit text-cyan-900 group-hover:scale-110 transition-transform">
-              <CupSoda className="w-8 h-8" />
+            <div className="p-4 bg-cyan-200 text-cyan-950 rounded-2xl text-4xl group-hover:scale-110 transition-transform shrink-0">
+              💧
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black text-cyan-950 block">
+              <span className="text-2xl sm:text-3xl font-black text-cyan-950 block">
                 {tSenior('requests.THIRSTY')}
               </span>
-              <span className="text-xs sm:text-sm text-cyan-800 font-bold block mt-0.5">
+              <span className="text-base text-cyan-900 font-bold block mt-1">
                 {tSenior('requests.THIRSTY_desc')}
               </span>
             </div>
           </button>
 
-          {/* Medicine */}
+          {/* 3. Medicine */}
           <button
             type="button"
             onClick={() => handleQuickRequest('MEDICINE')}
-            className="p-5 sm:p-6 bg-rose-50 hover:bg-rose-100 border-3 border-rose-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex flex-col justify-between min-h-[140px] group"
+            className="p-6 bg-rose-50 hover:bg-rose-100 border-4 border-rose-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-4 group"
           >
-            <div className="p-3 bg-rose-200 rounded-2xl w-fit text-rose-900 group-hover:scale-110 transition-transform">
-              <Pill className="w-8 h-8" />
+            <div className="p-4 bg-rose-200 text-rose-950 rounded-2xl text-4xl group-hover:scale-110 transition-transform shrink-0">
+              💊
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black text-rose-950 block">
+              <span className="text-2xl sm:text-3xl font-black text-rose-950 block">
                 {tSenior('requests.MEDICINE')}
               </span>
-              <span className="text-xs sm:text-sm text-rose-800 font-bold block mt-0.5">
+              <span className="text-base text-rose-900 font-bold block mt-1">
                 {tSenior('requests.MEDICINE_desc')}
               </span>
             </div>
           </button>
 
-          {/* Toilet */}
-          <button
-            type="button"
-            onClick={() => handleQuickRequest('TOILET')}
-            className="p-5 sm:p-6 bg-indigo-50 hover:bg-indigo-100 border-3 border-indigo-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex flex-col justify-between min-h-[140px] group"
-          >
-            <div className="p-3 bg-indigo-200 rounded-2xl w-fit text-indigo-900 group-hover:scale-110 transition-transform">
-              <Footprints className="w-8 h-8" />
-            </div>
-            <div>
-              <span className="text-xl sm:text-2xl font-black text-indigo-950 block">
-                {tSenior('requests.TOILET')}
-              </span>
-              <span className="text-xs sm:text-sm text-indigo-800 font-bold block mt-0.5">
-                {tSenior('requests.TOILET_desc')}
-              </span>
-            </div>
-          </button>
-
-          {/* Pain */}
+          {/* 4. Pain */}
           <button
             type="button"
             onClick={() => handleQuickRequest('PAIN')}
-            className="p-5 sm:p-6 bg-orange-50 hover:bg-orange-100 border-3 border-orange-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex flex-col justify-between min-h-[140px] group"
+            className="p-6 bg-orange-50 hover:bg-orange-100 border-4 border-orange-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-4 group"
           >
-            <div className="p-3 bg-orange-200 rounded-2xl w-fit text-orange-900 group-hover:scale-110 transition-transform">
-              <HeartHandshake className="w-8 h-8" />
+            <div className="p-4 bg-orange-200 text-orange-950 rounded-2xl text-4xl group-hover:scale-110 transition-transform shrink-0">
+              🩹
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black text-orange-950 block">
+              <span className="text-2xl sm:text-3xl font-black text-orange-950 block">
                 {tSenior('requests.PAIN')}
               </span>
-              <span className="text-xs sm:text-sm text-orange-800 font-bold block mt-0.5">
+              <span className="text-base text-orange-900 font-bold block mt-1">
                 {tSenior('requests.PAIN_desc')}
               </span>
             </div>
           </button>
 
-          {/* Need Family Call */}
+          {/* 5. Family Call Request */}
           <button
             type="button"
             onClick={() => handleQuickRequest('FAMILY')}
-            className="p-5 sm:p-6 bg-emerald-50 hover:bg-emerald-100 border-3 border-emerald-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex flex-col justify-between min-h-[140px] group"
+            className="p-6 bg-emerald-50 hover:bg-emerald-100 border-4 border-emerald-300 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-4 group sm:col-span-2"
           >
-            <div className="p-3 bg-emerald-200 rounded-2xl w-fit text-emerald-900 group-hover:scale-110 transition-transform">
-              <Users className="w-8 h-8" />
+            <div className="p-4 bg-emerald-200 text-emerald-950 rounded-2xl text-4xl group-hover:scale-110 transition-transform shrink-0">
+              👨‍👩‍👧
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black text-emerald-950 block">
+              <span className="text-2xl sm:text-3xl font-black text-emerald-950 block">
                 {tSenior('requests.FAMILY')}
               </span>
-              <span className="text-xs sm:text-sm text-emerald-800 font-bold block mt-0.5">
+              <span className="text-base text-emerald-900 font-bold block mt-1">
                 {tSenior('requests.FAMILY_desc')}
               </span>
             </div>
@@ -291,135 +304,131 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigateTab }) => {
         </div>
       </section>
 
-      {/* CORE FEATURE CARDS */}
-      <section className="grid gap-3 sm:gap-4" aria-label="Main Features">
-        {/* Daily Check-In Card */}
-        <button
-          type="button"
-          onClick={() => setIsCheckInOpen(true)}
-          className={`w-full p-6 rounded-3xl border-3 flex items-center justify-between text-left active:scale-98 transition-all shadow-md ${
-            isCheckInCompleted
-              ? 'bg-emerald-50 border-emerald-400'
-              : 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white border-emerald-500'
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <div className={`p-4 rounded-2xl ${isCheckInCompleted ? 'bg-emerald-200 text-emerald-900' : 'bg-white/20 text-white'}`}>
-              <CheckCircle2 className="w-9 h-9" />
-            </div>
-            <div>
-              <span className={`text-2xl sm:text-3xl font-black block ${isCheckInCompleted ? 'text-emerald-950' : 'text-white'}`}>
-                {tSenior('seniorHome.cardCheckIn')}
-              </span>
-              <span className={`text-sm sm:text-base font-bold block mt-0.5 ${isCheckInCompleted ? 'text-emerald-800' : 'text-emerald-100'}`}>
-                {isCheckInCompleted 
-                  ? `${tSenior('checkin.completedTitle')} (${checkIn.note || '✓ Safe'})`
-                  : tSenior('seniorHome.cardCheckInDesc')}
-              </span>
-            </div>
-          </div>
-          <span className={`px-4 py-2 rounded-2xl text-sm font-black shrink-0 ${
-            isCheckInCompleted ? 'bg-emerald-200 text-emerald-900' : 'bg-white text-emerald-800'
-          }`}>
-            {isCheckInCompleted ? 'DONE' : 'CHECK IN'}
-          </span>
-        </button>
+      {/* CORE NAVIGATION SECTIONS */}
+      <section className="space-y-4 pt-2" aria-label="Main Sections">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 px-1">
+          इतर सेवा (More Options)
+        </h2>
 
-        {/* Explain Document Card */}
-        <button
-          type="button"
-          onClick={() => onNavigateTab?.('explainer')}
-          className="w-full p-6 bg-white hover:bg-slate-50 rounded-3xl border-3 border-purple-200 hover:border-purple-300 flex items-center justify-between text-left active:scale-98 transition-all shadow-md group"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-4 bg-purple-100 text-purple-800 rounded-2xl group-hover:scale-105 transition-transform">
-              <FileText className="w-9 h-9" />
-            </div>
-            <div>
-              <span className="text-2xl sm:text-3xl font-black text-slate-900 block">
-                {tSenior('seniorHome.cardExplainDoc')}
-              </span>
-              <span className="text-sm sm:text-base text-slate-600 font-medium block mt-0.5">
-                {tSenior('seniorHome.cardExplainDocDesc')}
-              </span>
-            </div>
-          </div>
-          <span className="p-3 bg-purple-50 text-purple-700 rounded-2xl font-black text-sm">
-            AI
-          </span>
-        </button>
-
-        {/* Nearby Services Card */}
-        <button
-          type="button"
-          onClick={() => onNavigateTab?.('services')}
-          className="w-full p-6 bg-white hover:bg-slate-50 rounded-3xl border-3 border-blue-200 hover:border-blue-300 flex items-center justify-between text-left active:scale-98 transition-all shadow-md group"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-4 bg-blue-100 text-blue-800 rounded-2xl group-hover:scale-105 transition-transform">
-              <MapPin className="w-9 h-9" />
-            </div>
-            <div>
-              <span className="text-2xl sm:text-3xl font-black text-slate-900 block">
-                {tSenior('seniorHome.cardServices')}
-              </span>
-              <span className="text-sm sm:text-base text-slate-600 font-medium block mt-0.5">
-                {tSenior('seniorHome.cardServicesDesc')}
-              </span>
-            </div>
-          </div>
-          <span className="p-3 bg-blue-50 text-blue-700 rounded-2xl font-black text-sm">
-            GPS
-          </span>
-        </button>
-
-        {/* Quick Row: My Requests & Device Status */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          {/* Requests Status */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Daily Check-In Card */}
           <button
             type="button"
-            onClick={() => setIsRequestsOpen(true)}
-            className="p-5 bg-white hover:bg-slate-50 border-3 border-slate-200 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-3"
+            onClick={() => onNavigate('checkin')}
+            className={`p-6 rounded-3xl border-4 text-left active:scale-98 transition-all shadow-md flex items-center justify-between ${
+              isCheckInCompleted
+                ? 'bg-emerald-50 border-emerald-400'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white border-emerald-500'
+            }`}
           >
-            <div className="p-3 bg-slate-100 text-slate-800 rounded-2xl shrink-0">
-              <Activity className="w-6 h-6" />
+            <div className="flex items-center gap-4">
+              <div className={`p-3.5 rounded-2xl ${isCheckInCompleted ? 'bg-emerald-200 text-emerald-900' : 'bg-white/20 text-white'}`}>
+                <CheckCircle2 className="w-9 h-9" />
+              </div>
+              <div>
+                <span className={`text-2xl sm:text-3xl font-black block ${isCheckInCompleted ? 'text-emerald-950' : 'text-white'}`}>
+                  {tSenior('seniorHome.cardCheckIn')}
+                </span>
+                <span className={`text-base font-bold block mt-0.5 ${isCheckInCompleted ? 'text-emerald-800' : 'text-emerald-100'}`}>
+                  {isCheckInCompleted ? '✓ आजचा Check-in पूर्ण' : tSenior('seniorHome.cardCheckInDesc')}
+                </span>
+              </div>
             </div>
-            <div>
-              <span className="text-lg sm:text-xl font-black text-slate-900 block">
-                {tSenior('seniorHome.cardRequests')}
-              </span>
-              <span className="text-xs text-slate-500 font-bold">
-                View status
-              </span>
-            </div>
+            <ArrowRight className={`w-7 h-7 ${isCheckInCompleted ? 'text-emerald-700' : 'text-white'}`} />
           </button>
 
-          {/* SAATHI Device Status */}
+          {/* Contact Family Card */}
           <button
             type="button"
-            onClick={() => setIsDeviceOpen(true)}
-            className="p-5 bg-white hover:bg-slate-50 border-3 border-purple-200 rounded-3xl text-left active:scale-95 transition-all shadow-md flex items-center gap-3"
+            onClick={() => onNavigate('family')}
+            className="p-6 bg-white hover:bg-slate-50 rounded-3xl border-4 border-blue-300 flex items-center justify-between text-left active:scale-98 transition-all shadow-md"
           >
-            <div className="p-3 bg-purple-100 text-purple-800 rounded-2xl shrink-0">
-              <Cpu className="w-6 h-6" />
+            <div className="flex items-center gap-4">
+              <div className="p-3.5 bg-blue-100 text-blue-900 rounded-2xl">
+                <Users className="w-9 h-9" />
+              </div>
+              <div>
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 block">
+                  {tSenior('seniorHome.cardFamily')}
+                </span>
+                <span className="text-base text-slate-600 font-bold block mt-0.5">
+                  {tSenior('seniorHome.cardFamilyDesc')}
+                </span>
+              </div>
             </div>
-            <div>
-              <span className="text-lg sm:text-xl font-black text-slate-900 block">
-                {tSenior('seniorHome.cardDevice')}
-              </span>
-              <span className="text-xs text-purple-700 font-bold">
-                🟢 Active
-              </span>
+            <ArrowRight className="w-7 h-7 text-blue-700" />
+          </button>
+
+          {/* Explain Document Card */}
+          <button
+            type="button"
+            onClick={() => onNavigate('explainer')}
+            className="p-6 bg-white hover:bg-slate-50 rounded-3xl border-4 border-purple-300 flex items-center justify-between text-left active:scale-98 transition-all shadow-md"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3.5 bg-purple-100 text-purple-900 rounded-2xl">
+                <FileText className="w-9 h-9" />
+              </div>
+              <div>
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 block">
+                  {tSenior('seniorHome.cardExplainDoc')}
+                </span>
+                <span className="text-base text-slate-600 font-bold block mt-0.5">
+                  {tSenior('seniorHome.cardExplainDocDesc')}
+                </span>
+              </div>
             </div>
+            <ArrowRight className="w-7 h-7 text-purple-700" />
+          </button>
+
+          {/* Nearby Help Card */}
+          <button
+            type="button"
+            onClick={() => onNavigate('services')}
+            className="p-6 bg-white hover:bg-slate-50 rounded-3xl border-4 border-cyan-300 flex items-center justify-between text-left active:scale-98 transition-all shadow-md"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3.5 bg-cyan-100 text-cyan-900 rounded-2xl">
+                <MapPin className="w-9 h-9" />
+              </div>
+              <div>
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 block">
+                  {tSenior('seniorHome.cardServices')}
+                </span>
+                <span className="text-base text-slate-600 font-bold block mt-0.5">
+                  {tSenior('seniorHome.cardServicesDesc')}
+                </span>
+              </div>
+            </div>
+            <ArrowRight className="w-7 h-7 text-cyan-700" />
+          </button>
+
+          {/* My Requests Status Card */}
+          <button
+            type="button"
+            onClick={() => onNavigate('requests')}
+            className="p-6 bg-white hover:bg-slate-50 rounded-3xl border-4 border-slate-300 flex items-center justify-between text-left active:scale-98 transition-all shadow-md sm:col-span-2"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3.5 bg-slate-100 text-slate-900 rounded-2xl">
+                <Activity className="w-9 h-9" />
+              </div>
+              <div>
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 block">
+                  {tSenior('seniorHome.cardRequests')}
+                </span>
+                <span className="text-base text-slate-600 font-bold block mt-0.5">
+                  {tSenior('seniorHome.cardRequestsDesc')}
+                </span>
+              </div>
+            </div>
+            <ArrowRight className="w-7 h-7 text-slate-700" />
           </button>
         </div>
       </section>
 
-      {/* Modals */}
+      {/* SOS Modal */}
       <SosModal isOpen={isSosOpen} onClose={() => setIsSosOpen(false)} />
-      <CheckInModal isOpen={isCheckInOpen} onClose={() => setIsCheckInOpen(false)} />
-      <SeniorRequestsModal isOpen={isRequestsOpen} onClose={() => setIsRequestsOpen(false)} />
-      <SeniorDeviceModal isOpen={isDeviceOpen} onClose={() => setIsDeviceOpen(false)} />
     </div>
   );
 };
