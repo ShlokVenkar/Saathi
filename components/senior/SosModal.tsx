@@ -23,11 +23,11 @@ export const SosModal: React.FC<SosModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const PRIYA_PHONE = '918591598630';
+  const SON_PHONE = '919619560729';
 
   const handleTriggerEmergency = (type: string) => {
     createRequest('EMERGENCY', 'APP');
-    const msg = `आपत्कालीन संदेश पाठवला आहे. काळजीवाहू व्यक्तीला त्वरित सतर्क करण्यात आले आहे.`;
+    const msg = `आपत्कालीन संदेश पाठवला आहे. मुलाला आणि काळजीवाहू व्यक्तीला त्वरित सतर्क करण्यात आले आहे.`;
     readAloud(msg);
   };
 
@@ -65,17 +65,17 @@ export const SosModal: React.FC<SosModalProps> = ({ isOpen, onClose }) => {
 
         {/* Big Action Buttons */}
         <div className="space-y-3">
-          {/* 1. Call Priya (Family) */}
+          {/* 1. Call Son (Family) */}
           <a
-            href="tel:+918591598630"
+            href="tel:+919619560729"
             onClick={() => handleTriggerEmergency('FAMILY_CALL')}
             className="w-full p-4 sm:p-5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-xl sm:text-2xl flex items-center justify-between shadow-lg active:scale-97 transition-all border-2 border-red-500"
           >
             <div className="flex items-center gap-3">
               <Phone className="w-7 h-7 shrink-0" />
               <div className="text-left">
-                <span className="block">प्रियाला फोन करा (Family)</span>
-                <span className="text-xs font-bold text-red-100 block">+91 8591598630</span>
+                <span className="block">मुलाला फोन करा (Call Son)</span>
+                <span className="text-xs font-bold text-red-100 block">+91 96195 60729</span>
               </div>
             </div>
             <span className="text-sm font-black bg-red-800 px-3 py-1 rounded-xl">कॉल</span>
@@ -83,7 +83,7 @@ export const SosModal: React.FC<SosModalProps> = ({ isOpen, onClose }) => {
 
           {/* 2. WhatsApp Family */}
           <a
-            href={`https://wa.me/${PRIYA_PHONE}?text=${encodeURIComponent('🚨 तातडीने मदत हवी आहे (EMERGENCY)! मला त्वरित फोन कर.')}`}
+            href={`https://wa.me/${SON_PHONE}?text=${encodeURIComponent('🚨 तातडीने मदत हवी आहे (EMERGENCY)! मला त्वरित फोन कर.')}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleTriggerEmergency('WHATSAPP')}

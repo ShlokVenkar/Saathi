@@ -181,7 +181,7 @@ export const FamilyDashboard: React.FC = () => {
             {!isCheckInCompleted && (
               <button
                 type="button"
-                onClick={() => showToast('Gentle notification sent to Raj Sharma')}
+                onClick={() => showToast(`Gentle notification sent to ${senior?.name || 'Shlok'}`)}
                 className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-bold shrink-0"
               >
                 Remind

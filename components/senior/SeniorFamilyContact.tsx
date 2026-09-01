@@ -22,8 +22,8 @@ export const SeniorFamilyContact: React.FC<SeniorFamilyContactProps> = ({ onBack
   const { senior, tSenior, createRequest, readAloud } = useSaathi();
   const [selectedPreset, setSelectedPreset] = useState<string>('मी ठीक आहे');
 
-  const PRIYA_PHONE = '918591598630';
-  const DISPLAY_PHONE = '+91 8591598630';
+  const SON_PHONE = '919619560729';
+  const DISPLAY_PHONE = '+91 96195 60729';
 
   const prefilledOptions = [
     { label: '✓ मी ठीक आहे (I\'m OK)', text: 'मी ठीक आहे. काळजी करू नकोस. (I am OK. Do not worry.)' },
@@ -36,11 +36,11 @@ export const SeniorFamilyContact: React.FC<SeniorFamilyContactProps> = ({ onBack
     const message = customText || selectedPreset;
     createRequest('FAMILY', 'APP');
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/${PRIYA_PHONE}?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${SON_PHONE}?text=${encoded}`, '_blank');
   };
 
   const handleReadScreen = () => {
-    const text = `कुटुंबाशी संपर्क. प्रिया शर्मा, मुलगी. फोन करा किंवा व्हॉट्सॲप मेसेज पाठवा.`;
+    const text = `कुटुंबाशी संपर्क. मुलगा (Son). फोन करा किंवा व्हॉट्सॲप मेसेज पाठवा.`;
     readAloud(text);
   };
 
@@ -80,21 +80,21 @@ export const SeniorFamilyContact: React.FC<SeniorFamilyContactProps> = ({ onBack
       {/* Grid: Primary Caregiver vs Emergency Helplines */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Primary Caregiver Card (Priya) */}
+        {/* Primary Caregiver Card (Son) */}
         <section className="lg:col-span-7 bg-blue-50 border-4 border-blue-300 rounded-3xl p-6 sm:p-8 shadow-md space-y-6 flex flex-col justify-between">
           <div className="flex items-center gap-4">
             <div className="p-5 bg-blue-600 text-white rounded-3xl shrink-0 shadow-md text-3xl">
-              👩‍💼
+              👨‍💼
             </div>
             <div>
               <span className="text-xs sm:text-sm font-black uppercase text-blue-900 bg-blue-200 px-3.5 py-1 rounded-full">
                 मुख्य काळजीवाहू • Primary Caregiver
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-1.5">
-                Priya Sharma
+                Son (Caregiver)
               </h2>
               <p className="text-lg text-slate-600 font-bold">
-                मुलगी (Daughter)
+                मुलगा (Son)
               </p>
               <p className="text-base text-blue-900 font-black mt-0.5">
                 📞 {DISPLAY_PHONE}
@@ -110,7 +110,7 @@ export const SeniorFamilyContact: React.FC<SeniorFamilyContactProps> = ({ onBack
               className="p-5 sm:p-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-3xl font-black text-xl sm:text-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all border-4 border-emerald-400 text-center"
             >
               <Phone className="w-8 h-8 shrink-0" />
-              <span>फोन करा<br /><span className="text-sm font-bold text-emerald-100">CALL PRIYA</span></span>
+              <span>फोन करा<br /><span className="text-sm font-bold text-emerald-100">CALL SON</span></span>
             </a>
 
             {/* 2. Direct WhatsApp Message */}

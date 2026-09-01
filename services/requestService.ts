@@ -51,7 +51,7 @@ class RequestService {
   public createRequest(
     type: RequestType,
     source: RequestSource = 'APP',
-    seniorName: string = 'Raj Sharma',
+    seniorName: string = 'Shlok',
     customMessage?: string
   ): RequestItem {
     let priority: RequestPriority = 'NORMAL';
@@ -60,7 +60,7 @@ class RequestService {
 
     const newReq: RequestItem = {
       id: `req-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-      seniorId: 'senior-raj-1',
+      seniorId: 'senior-shlok-1',
       seniorName,
       type,
       message: customMessage || `Request for ${type.toLowerCase()}`,
@@ -75,7 +75,7 @@ class RequestService {
     return newReq;
   }
 
-  public acknowledgeRequest(requestId: string, caregiverName: string = 'Priya Sharma'): void {
+  public acknowledgeRequest(requestId: string, caregiverName: string = 'Son (Caregiver)'): void {
     this.requests = this.requests.map((r) => {
       if (r.id === requestId) {
         return {
@@ -90,7 +90,7 @@ class RequestService {
     this.save();
   }
 
-  public resolveRequest(requestId: string, caregiverName: string = 'Priya Sharma'): void {
+  public resolveRequest(requestId: string, caregiverName: string = 'Son (Caregiver)'): void {
     this.requests = this.requests.map((r) => {
       if (r.id === requestId) {
         return {

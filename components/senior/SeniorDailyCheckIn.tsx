@@ -25,7 +25,7 @@ export const SeniorDailyCheckIn: React.FC<SeniorDailyCheckInProps> = ({ onBack, 
   const [justCompleted, setJustCompleted] = useState(false);
 
   const isCompleted = checkIn.status === 'COMPLETED' || justCompleted;
-  const PRIYA_PHONE = '918591598630';
+  const SON_PHONE = '919619560729';
 
   const handleImOk = () => {
     submitCheckIn('GOOD');
@@ -140,15 +140,15 @@ export const SeniorDailyCheckIn: React.FC<SeniorDailyCheckInProps> = ({ onBack, 
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <a
-                  href="tel:+918591598630"
+                  href="tel:+919619560729"
                   className="p-4 bg-blue-900 hover:bg-blue-800 text-white rounded-2xl font-black text-lg flex items-center justify-center gap-2 shadow-md active:scale-95"
                 >
                   <Phone className="w-5 h-5" />
-                  <span>प्रियाला फोन करा</span>
+                  <span>मुलाला फोन करा (Call Son)</span>
                 </a>
 
                 <a
-                  href={`https://wa.me/${PRIYA_PHONE}?text=${encodeURIComponent('मी ठीक आहे. आजचा चेक-इन पूर्ण झाला. (I am OK. Daily check-in completed.)')}`}
+                  href={`https://wa.me/${SON_PHONE}?text=${encodeURIComponent('मी ठीक आहे. आजचा चेक-इन पूर्ण झाला. (I am OK. Daily check-in completed.)')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-black text-lg flex items-center justify-center gap-2 shadow-md active:scale-95"

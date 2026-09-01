@@ -119,31 +119,31 @@ export const SeniorAiCompanion: React.FC<SeniorAiCompanionProps> = ({ onBack, on
     // 1. Loneliness / Feeling alone
     if (q.includes('एकटं') || q.includes('एकाकी') || q.includes('alone') || q.includes('lonely') || q.includes('अकेला')) {
       if (seniorLang === 'hi') {
-        return { reply: 'मैं हमेशा आपके साथ हूँ। 😊 आप चाहें तो प्रिया जी से बात कर सकते हैं या कोई मधुर भजन सुन सकते हैं। क्या मैं भजन शुरू करूँ?' };
+        return { reply: 'मैं हमेशा आपके साथ हूँ। 😊 आप चाहें तो अपने बेटे (केयरगिवर) से बात कर सकते हैं या कोई मधुर भजन सुन सकते हैं। क्या मैं भजन शुरू करूँ?' };
       }
       if (seniorLang === 'en') {
-        return { reply: 'I am always right here with you! 😊 Would you like to call Priya or listen to some peaceful devotional music?' };
+        return { reply: 'I am always right here with you! 😊 Would you like to call your son or listen to some peaceful devotional music?' };
       }
-      return { reply: 'मी इथे तुमच्या सोबत आहे! 😊 काळजी करू नका. तुम्हाला प्रियाशी बोलायचे आहे का, की शांत भक्तीगीत ऐकायचे आहे?' };
+      return { reply: 'मी इथे तुमच्या सोबत आहे! 😊 काळजी करू नका. तुम्हाला मुलाशी (केअरगिव्हर) बोलायचे आहे का, की शांत भक्तीगीत ऐकायचे आहे?' };
     }
 
-    // 2. Family Call / Talk to daughter
-    if (q.includes('मुलगी') || q.includes('प्रिया') || q.includes('family') || q.includes('daughter') || q.includes('बेटी') || q.includes('बात')) {
+    // 2. Family Call / Talk to son
+    if (q.includes('मुलगा') || q.includes('मुलगी') || q.includes('son') || q.includes('family') || q.includes('daughter') || q.includes('बेटा') || q.includes('बात')) {
       createRequest('FAMILY', 'APP');
       if (seniorLang === 'hi') {
         return { 
-          reply: 'मैंने प्रिया जी को संदेश भेज दिया है कि आप उनसे बात करना चाहते हैं। आप नीचे दिए गए बटन से सीधे कॉल भी कर सकते हैं।',
+          reply: 'मैंने आपके बेटे को संदेश भेज दिया है कि आप उनसे बात करना चाहते हैं। आप नीचे दिए गए बटन से सीधे कॉल भी कर सकते हैं।',
           action: 'call'
         };
       }
       if (seniorLang === 'en') {
         return { 
-          reply: 'I have notified Priya that you want to talk! You can also tap the call button below to call her directly.',
+          reply: 'I have notified your son that you want to talk! You can also tap the call button below to call him directly.',
           action: 'call'
         };
       }
       return { 
-        reply: 'मी प्रियाला लगेच निरोप पाठवला आहे की तुम्हाला बोलायचे आहे. तुम्ही खालील बटनावरून लगेच थेट फोनही करू शकता.',
+        reply: 'मी मुलाला लगेच निरोप पाठवला आहे की तुम्हाला बोलायचे आहे. तुम्ही खालील बटनावरून लगेच थेट फोनही करू शकता.',
         action: 'call'
       };
     }

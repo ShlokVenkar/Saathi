@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSaathi } from '@/context/SaathiContext';
-import { ArrowLeft, Play, Pause, Volume2, Music, ExternalLink, Sparkles } from 'lucide-react';
+import { ArrowLeft, Play, Pause, Volume2, Music, ExternalLink, Sparkles, RefreshCw } from 'lucide-react';
 
 interface DevotionalTrack {
   id: string;
@@ -12,6 +12,7 @@ interface DevotionalTrack {
   subtitle: string;
   youtubeId: string;
   icon: string;
+  ambientToneFreq?: number;
 }
 
 const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
@@ -21,8 +22,9 @@ const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
     deity: 'Lord Ganesha',
     title: 'सुखकर्ता दुखहर्ता (Sukh Karta Dukh Harta)',
     subtitle: 'गणपती आरती • Ganpati Aarti',
-    youtubeId: 'b_7h1b306b4', // Ganpati Aarti
-    icon: '🙏'
+    youtubeId: '1Uqf73cK950', // Verified embeddable Ganpati Aarti
+    icon: '🙏',
+    ambientToneFreq: 432
   },
   {
     id: 'shiv',
@@ -30,8 +32,9 @@ const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
     deity: 'Lord Shiva',
     title: 'ॐ नमः शिवाय (Om Namah Shivaya Dhun)',
     subtitle: 'शांत शिव धून • Peaceful Shiva Chant',
-    youtubeId: 'Dmgv_K2Gj-Q',
-    icon: '🕉️'
+    youtubeId: 'U1dG8UqA1wM',
+    icon: '🕉️',
+    ambientToneFreq: 528
   },
   {
     id: 'krishna',
@@ -39,8 +42,9 @@ const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
     deity: 'Lord Krishna',
     title: 'अच्युतम केशवम (Achyutam Keshavam)',
     subtitle: 'कृष्ण भजन • Krishna Bhajan',
-    youtubeId: 'pQZtA_M40v8',
-    icon: '🌸'
+    youtubeId: 'p-xQj4Cff78',
+    icon: '🌸',
+    ambientToneFreq: 432
   },
   {
     id: 'ram',
@@ -48,8 +52,9 @@ const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
     deity: 'Lord Rama',
     title: 'श्री रामचंद्र कृपालु भजमन',
     subtitle: 'राम स्तुती • Shri Ram Stuti',
-    youtubeId: 'wR6f1X58x5Q',
-    icon: '🪔'
+    youtubeId: '_bM9d3F5p3w',
+    icon: '🪔',
+    ambientToneFreq: 440
   },
   {
     id: 'hanuman',
@@ -57,8 +62,9 @@ const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
     deity: 'Lord Hanuman',
     title: 'हनुमान चालीसा (Hanuman Chalisa)',
     subtitle: 'संकट मोचन • Hanuman Chalisa',
-    youtubeId: 'AETFvQonfV8',
-    icon: '❤️'
+    youtubeId: '5u5XF9O2O3o',
+    icon: '❤️',
+    ambientToneFreq: 396
   },
   {
     id: 'abhang',
@@ -66,8 +72,9 @@ const DEVOTIONAL_TRACKS: DevotionalTrack[] = [
     deity: 'Sant Tukaram',
     title: 'विठू माऊली तू (Vithu Mauli Tu)',
     subtitle: 'मराठी भक्तीगीत • Vithoba Abhang',
-    youtubeId: 'Z6K5uX7g254',
-    icon: '🎵'
+    youtubeId: 'kC8B4vK7t90',
+    icon: '🎵',
+    ambientToneFreq: 432
   }
 ];
 
@@ -79,12 +86,75 @@ export const SeniorDevotional: React.FC<SeniorDevotionalProps> = ({ onBack }) =>
   const { tSenior, readAloud } = useSaathi();
   const [selectedTrack, setSelectedTrack] = useState<DevotionalTrack>(DEVOTIONAL_TRACKS[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAmbientPlaying, setIsAmbientPlaying] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const oscillatorRef = useRef<OscillatorNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
 
   const handleSelectTrack = (track: DevotionalTrack) => {
     setSelectedTrack(track);
     setIsPlaying(true);
+    stopAmbientSound();
     readAloud(`${track.title}. ${track.subtitle}`);
   };
+
+  // Soothing Temple Bells & Ambient Sound Synthesis (for offline / instant zero-latency playback)
+  const toggleAmbientSound = () => {
+    if (isAmbientPlaying) {
+      stopAmbientSound();
+    } else {
+      startAmbientSound(selectedTrack.ambientToneFreq || 432);
+    }
+  };
+
+  const startAmbientSound = (freq: number) => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      
+      const ctx = new AudioCtx();
+      audioContextRef.current = ctx;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+      gain.gain.setValueAtTime(0.01, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + 1.5);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      oscillatorRef.current = osc;
+      gainNodeRef.current = gain;
+      setIsAmbientPlaying(true);
+      readAloud(`शांत ओंकार आणि घंटानाद सुरू केला आहे.`);
+    } catch {
+      setIsAmbientPlaying(false);
+    }
+  };
+
+  const stopAmbientSound = () => {
+    if (oscillatorRef.current && audioContextRef.current) {
+      try {
+        oscillatorRef.current.stop();
+        oscillatorRef.current.disconnect();
+        audioContextRef.current.close();
+      } catch {}
+    }
+    oscillatorRef.current = null;
+    audioContextRef.current = null;
+    setIsAmbientPlaying(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      stopAmbientSound();
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 pb-28">
@@ -92,7 +162,10 @@ export const SeniorDevotional: React.FC<SeniorDevotionalProps> = ({ onBack }) =>
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"
-          onClick={onBack}
+          onClick={() => {
+            stopAmbientSound();
+            onBack();
+          }}
           className="px-4 py-2.5 sm:px-5 sm:py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-2xl font-black text-base sm:text-xl flex items-center gap-2 active:scale-95 transition-all shadow-sm border-2 border-slate-300"
         >
           <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -116,7 +189,7 @@ export const SeniorDevotional: React.FC<SeniorDevotionalProps> = ({ onBack }) =>
               भक्तीची गाणी (Devotional Music)
             </h1>
             <p className="text-amber-100 text-base sm:text-lg font-bold">
-              शांत, मधुर आणि भक्तीमय गाणी ऐका
+              शांत, मधुर आणि भक्तीमय गाणी व घंटानाद ऐका
             </p>
           </div>
         </div>
@@ -142,26 +215,57 @@ export const SeniorDevotional: React.FC<SeniorDevotionalProps> = ({ onBack }) =>
             </div>
           </div>
 
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Quick In-App Ambient Chant & Bells Player */}
+            <button
+              type="button"
+              onClick={toggleAmbientSound}
+              className={`px-4 py-2.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all border-2 ${
+                isAmbientPlaying
+                  ? 'bg-amber-600 text-white border-amber-700 animate-pulse'
+                  : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
+              }`}
+            >
+              <Volume2 className="w-4 h-4" />
+              <span>{isAmbientPlaying ? 'शांत नाद थांबवा' : 'शांत ओंकार नाद (Chant Sound)'}</span>
+            </button>
+
+            {/* Direct YouTube link fallback */}
+            <a
+              href={`https://www.youtube.com/watch?v=${selectedTrack.youtubeId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 w-fit"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>YouTube वर थेट उघडा</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Video / Audio Embed with YouTube nocookie */}
+        <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-inner bg-slate-950 border-2 border-slate-800 relative">
+          <iframe
+            key={selectedTrack.id}
+            className="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${selectedTrack.youtubeId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1&enablejsapi=1`}
+            title={selectedTrack.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          ></iframe>
+        </div>
+
+        {/* Senior Friendly Notice & Instructions */}
+        <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm text-amber-900 font-bold">
+          <span>💡 जर व्हिडिओ सुरू होत नसेल, तर वरील &quot;YouTube वर थेट उघडा&quot; किंवा &quot;शांत ओंकार नाद&quot; बटण दाबा.</span>
           <a
             href={`https://www.youtube.com/watch?v=${selectedTrack.youtubeId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 w-fit"
+            className="text-red-700 underline font-black shrink-0"
           >
-            <ExternalLink className="w-4 h-4" />
-            <span>YouTube वर उघडा</span>
+            Play on YouTube
           </a>
-        </div>
-
-        {/* Video / Audio Embed */}
-        <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-inner bg-slate-900 border-2 border-slate-800">
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${selectedTrack.youtubeId}?autoplay=${isPlaying ? 1 : 0}&rel=0`}
-            title={selectedTrack.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
         </div>
       </div>
 
@@ -210,3 +314,4 @@ export const SeniorDevotional: React.FC<SeniorDevotionalProps> = ({ onBack }) =>
     </div>
   );
 };
+
