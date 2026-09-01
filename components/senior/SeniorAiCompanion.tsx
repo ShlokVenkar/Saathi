@@ -232,20 +232,20 @@ export const SeniorAiCompanion: React.FC<SeniorAiCompanionProps> = ({ onBack, on
   return (
     <div className="w-full max-w-4xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 pb-28">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-2">
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-2xl font-black text-lg sm:text-xl flex items-center gap-2 active:scale-95 transition-all shadow-sm border-2 border-slate-300"
+          className="px-4 py-2.5 sm:px-5 sm:py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-2xl font-black text-base sm:text-xl flex items-center gap-2 active:scale-95 transition-all shadow-sm border-2 border-slate-300"
         >
-          <ArrowLeft className="w-6 h-6" />
+          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           <span>{tSenior('common.back')}</span>
         </button>
 
         <div className="flex items-center gap-2">
-          <span className="px-3.5 py-1.5 bg-blue-100 text-blue-950 border border-blue-300 rounded-xl font-black text-sm flex items-center gap-1.5">
-            <Bot className="w-4 h-4 text-blue-800" />
-            साथी मित्र (AI Companion)
+          <span className="px-3 py-1.5 bg-blue-100 text-blue-950 border border-blue-300 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5">
+            <Bot className="w-4 h-4 text-blue-800 shrink-0" />
+            <span>साथी मित्र (AI)</span>
           </span>
         </div>
       </div>

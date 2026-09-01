@@ -28,19 +28,19 @@ export default function HomePage() {
     <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col bg-slate-100 selection:bg-blue-100 selection:text-blue-900">
       {/* Top Banner when in non-Senior mode (Family / Hardware / Admin) with one-click return */}
       {currentRole !== 'senior' && (
-        <div className="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm font-bold border-b border-slate-800 shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded font-mono uppercase text-xs">
-              JUDGE / DEMO MODE: {currentRole.toUpperCase()}
+        <div className="bg-slate-900 text-white px-3 py-2 flex items-center justify-between gap-2 text-xs font-bold border-b border-slate-800 shrink-0 shadow-sm">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded font-mono uppercase text-[11px] font-black truncate">
+              DEMO: {currentRole.toUpperCase()}
             </span>
           </div>
           <button
             type="button"
             onClick={() => setCurrentRole('senior')}
-            className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold flex items-center gap-1.5 active:scale-95 transition-all"
+            className="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold flex items-center gap-1 text-xs shrink-0 active:scale-95 transition-all shadow-xs"
           >
-            <Smartphone className="w-4 h-4" />
-            <span>Switch to Senior PWA</span>
+            <Smartphone className="w-3.5 h-3.5" />
+            <span>Senior PWA</span>
           </button>
         </div>
       )}

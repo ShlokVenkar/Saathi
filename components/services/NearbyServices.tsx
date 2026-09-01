@@ -84,22 +84,22 @@ export const NearbyServices: React.FC<NearbyServicesProps> = ({ onBack }) => {
   return (
     <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 pb-28">
       {/* Top Header */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-2">
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-2xl font-black text-lg sm:text-xl flex items-center gap-2 active:scale-95 transition-all shadow-sm border-2 border-slate-300"
+          className="px-4 py-2.5 sm:px-5 sm:py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-2xl font-black text-base sm:text-xl flex items-center gap-2 active:scale-95 transition-all shadow-sm border-2 border-slate-300"
         >
-          <ArrowLeft className="w-6 h-6" />
+          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           <span>{tSenior('common.back')}</span>
         </button>
 
         <button
           type="button"
           onClick={handleReadScreen}
-          className="p-3.5 bg-blue-100 hover:bg-blue-200 text-blue-950 rounded-2xl font-black text-sm sm:text-base flex items-center gap-2 active:scale-95 transition-all border-2 border-blue-300 shadow-sm"
+          className="px-3.5 py-2.5 sm:p-3.5 bg-blue-100 hover:bg-blue-200 text-blue-950 rounded-2xl font-black text-xs sm:text-base flex items-center gap-1.5 active:scale-95 transition-all border-2 border-blue-300 shadow-sm"
         >
-          <Volume2 className="w-5 h-5 text-blue-800" />
+          <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-800 shrink-0" />
           <span>{tSenior('common.readAloud')}</span>
         </button>
       </div>

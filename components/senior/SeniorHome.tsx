@@ -74,27 +74,28 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigate }) => {
   return (
     <div className="w-full max-w-full overflow-x-hidden">
       {/* ================= MOBILE TOP APP BAR ================= */}
-      <div className="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 px-3 py-2.5 shadow-sm">
+      <div className="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 px-3 py-2 shadow-xs">
         <div className="max-w-xl mx-auto flex items-center justify-between gap-2">
-          {/* Logo */}
+          {/* Brand Logo */}
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-xl font-black text-blue-950 tracking-tight">SAATHI</span>
-            <span className="text-xs">🤝</span>
+            <span className="text-sm">🤝</span>
           </div>
 
-          {/* Right Actions: Speaker + Language Selector */}
-          <div className="flex items-center gap-1.5">
+          {/* Right Actions: Compact Speaker + Responsive Language Selector */}
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleReadScreen}
-              className="px-2.5 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-950 rounded-xl flex items-center gap-1 font-black text-xs border border-blue-300 active:scale-95 transition-all"
+              className="px-2.5 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-950 rounded-xl flex items-center gap-1 font-black text-xs border border-blue-300 active:scale-95 transition-all shrink-0 shadow-xs"
               aria-label="Read Screen Aloud"
+              title={tSenior('common.readAloud')}
             >
               <Volume2 className="w-4 h-4 text-blue-800 shrink-0" />
-              <span>{tSenior('common.readAloud')}</span>
+              <span className="font-bold text-xs">{tSenior('common.readAloud')}</span>
             </button>
 
-            <div className="flex bg-slate-100 p-0.5 rounded-xl border border-slate-300">
+            <div className="flex bg-slate-100 p-0.5 rounded-xl border border-slate-300 shrink-0">
               {(['mr', 'hi', 'en'] as Language[]).map((lang) => (
                 <button
                   key={lang}
@@ -103,7 +104,7 @@ export const SeniorHome: React.FC<SeniorHomeProps> = ({ onNavigate }) => {
                   className={`px-2 py-1 rounded-lg text-xs font-black transition-all ${
                     seniorLang === lang
                       ? 'bg-blue-900 text-white shadow-xs'
-                      : 'text-slate-700'
+                      : 'text-slate-700 hover:text-slate-950'
                   }`}
                 >
                   {LANGUAGE_NAMES[lang].native}
