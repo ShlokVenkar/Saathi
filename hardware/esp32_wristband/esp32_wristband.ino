@@ -10,7 +10,7 @@ const char* password = "YOUR_WIFI_PASSWORD";
 
 // The endpoint where the SAATHI Next.js Backend is listening
 // Configured with current local machine IP & Port
-String serverName = "http://10.139.195.128:3000/api/alert"; 
+String serverName = "http://YOUR_SERVER_IP:PORT/api/alert"; 
 
 // --- Pin Definitions ---
 const int PIR_PIN = 27;     // HC-SR501 PIR sensor
