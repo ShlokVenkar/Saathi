@@ -96,8 +96,8 @@ class NotificationService {
     const waMessage: WhatsAppSimulationMessage = {
       id: `wa-${Date.now()}`,
       sender: 'SAATHI Assistive Gateway',
-      recipientPhone: '+91 98765 43210 (Priya Sharma)',
-      recipientName: 'Priya Sharma',
+      recipientPhone: '+91 96195 60729 (Son)',
+      recipientName: 'Son (Caregiver)',
       timestamp: formattedTime,
       priority: req.priority,
       requestType: req.type,

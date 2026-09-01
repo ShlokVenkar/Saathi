@@ -12,13 +12,13 @@ export const SAMPLE_DOCUMENTS: SampleDocPreset[] = [
   {
     id: 'sample-rx-1',
     nameKey: 'explainer.sampleMedical',
-    defaultTitle: 'Dr. Kulkarni Clinic - Blood Pressure & Diabetes Prescription',
+    defaultTitle: 'Dr. Suresh Mehta Clinic - Blood Pressure & Diabetes Prescription',
     category: 'medical',
-    rawText: `DR. ANANT KULKARNI, MD (Medicine), Reg: MMC-74829
-Kothrud, Pune - 411038
+    rawText: `DR. SURESH MEHTA, MD (Medicine), Reg: MMC-74829
+Near Vidyalankar Campus, Wadala East, Antop Hill, Mumbai - 400037
 Date: 28th August 2026
 
-PATIENT: Raj Sharma, Male, Age: 74 Yrs
+PATIENT: Shlok Sharma, Male, Age: 74 Yrs
 Diagnosis: Essential Hypertension Stage 2, Mild Osteoarthritis
 
 PRESCRIPTION:
@@ -29,8 +29,8 @@ PRESCRIPTION:
 
 ADVICE / INSTRUCTIONS:
 - Low sodium salt intake (less than 1 tsp per day).
-- Daily 20 min morning gentle walking.
-- Fasting Blood Sugar & Serum Creatinine test scheduled on 15th September 2026.
+- Daily 20 min morning gentle walking around Vidyalankar Garden.
+- Fasting Blood Sugar & Serum Creatinine test scheduled on 15th September 2026 at Sion Hospital.
 - Next follow-up visit: 18th September 2026.`
   },
   {
@@ -39,30 +39,30 @@ ADVICE / INSTRUCTIONS:
     defaultTitle: 'Govt Pensioners Life Certificate (Jeevan Pramaan) Notice',
     category: 'pension',
     rawText: `GOVERNMENT OF MAHARASHTRA
-Department of Treasuries and Accounts - Pune Central Division
-Ref: PEN/PUNE/2026/88412
+Department of Treasuries and Accounts - Mumbai Central Division
+Ref: PEN/MUM/2026/88412
 
-TO: Mr. Raj Sharma, PPO No: 7129004821
+TO: Mr. Shlok Sharma, PPO No: 7129004821
 Subject: Submission of Annual Digital Life Certificate (Jeevan Pramaan) for FY 2026-27
 
 Dear Pensioner,
 This is an annual notification regarding continuation of your state government monthly retirement pension (Rs. 24,500/month).
 
 MANDATORY ACTIONS REQUIRED:
-1. You must submit your Digital Life Certificate (Jeevan Pramaan Patra) either online via face authentication app or by visiting your nearest Citizen Service Centre (CSC) or SBI Kothrud Branch.
+1. You must submit your Digital Life Certificate (Jeevan Pramaan Patra) either online via face authentication app or by visiting your nearest Citizen Service Centre (CSC) or SBI Antop Hill / Wadala Branch.
 2. DEADLINE: 30th November 2026.
 3. Please carry your Aadhaar card and PPO pension passbook.
 4. Failure to submit before 30th November will result in temporary suspension of pension credit starting December 2026.
-5. For door-step assisted biometric service, call toll-free helpline 1800-180-1111.`
+5. For door-step assisted biometric service in Wadala/Antop Hill, call toll-free helpline 1800-180-1111.`
   },
   {
     id: 'sample-bill-3',
     nameKey: 'explainer.sampleBill',
-    defaultTitle: 'MSEDCL Maharashtra Electricity Distribution Bill',
+    defaultTitle: 'BEST Undertaking / MSEDCL Mumbai Electricity Bill',
     category: 'utility',
-    rawText: `MAHARASHTRA STATE ELECTRICITY DISTRIBUTION CO. LTD. (MSEDCL)
+    rawText: `BRIHANMUMBAI ELECTRIC SUPPLY & TRANSPORT (BEST) / MSEDCL
 Consumer No: 021584930129 | Billing Cycle: Aug 2026
-Name: Raj Sharma | Address: Flat 4, Shubham Apt, Kothrud, Pune
+Name: Shlok Sharma | Address: Flat 4, CGS Colony, Near Vidyalankar Campus, Wadala East, Antop Hill, Mumbai 400037
 
 BILL SUMMARY:
 Units Consumed: 142 kWh (Normal domestic tier)

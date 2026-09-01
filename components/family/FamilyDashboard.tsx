@@ -72,20 +72,20 @@ export const FamilyDashboard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6 space-y-6 pb-28">
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 pb-28 overflow-x-hidden">
       {/* Toast */}
       {toastMessage && (
-        <div className="fixed top-20 right-4 z-50 p-4 bg-slate-900 text-white font-bold rounded-2xl shadow-2xl flex items-center gap-2 border border-slate-700 animate-slide-down">
+        <div className="fixed top-16 right-4 z-50 p-4 bg-slate-900 text-white font-bold rounded-2xl shadow-2xl flex items-center gap-2 border border-slate-700 animate-slide-down">
           <CheckCircle2 className="w-5 h-5 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header Banner with Senior Link & Caregiver Language */}
-      <header className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 border border-slate-800">
+      <header className="bg-slate-900 text-white rounded-3xl p-5 sm:p-8 shadow-xl space-y-6 border border-slate-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 bg-blue-600/30 text-blue-300 rounded-full text-xs font-black uppercase tracking-wider border border-blue-500/30">
                 {tFamily('familyDashboard.title')}
               </span>
@@ -96,7 +96,7 @@ export const FamilyDashboard: React.FC = () => {
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
               {tFamily('familyDashboard.subtitle')}
             </h1>
-            <p className="text-sm text-slate-400 font-medium">
+            <p className="text-xs sm:text-sm text-slate-400 font-medium">
               {senior.locationName} • Caregiver: <strong>{caregiver.name} ({caregiver.relationship})</strong>
             </p>
           </div>
@@ -149,7 +149,7 @@ export const FamilyDashboard: React.FC = () => {
             </div>
             <div>
               <span className="text-xs uppercase font-black tracking-wider text-slate-400 block">Status</span>
-              <span className="text-lg font-black block">
+              <span className="text-base sm:text-lg font-black block">
                 {overallStatus === 'EMERGENCY'
                   ? tFamily('familyDashboard.statusEmergency')
                   : overallStatus === 'ATTENTION'
@@ -173,7 +173,7 @@ export const FamilyDashboard: React.FC = () => {
                 <span className="text-xs uppercase font-black tracking-wider text-slate-400 block">
                   {tFamily('familyDashboard.todayCheckIn')}
                 </span>
-                <span className="text-base font-bold block">
+                <span className="text-sm sm:text-base font-bold block">
                   {isCheckInCompleted ? tFamily('checkin.familyStatusCompleted') : tFamily('checkin.familyStatusPending')}
                 </span>
               </div>
@@ -181,7 +181,7 @@ export const FamilyDashboard: React.FC = () => {
             {!isCheckInCompleted && (
               <button
                 type="button"
-                onClick={() => showToast('Gentle notification sent to Raj Sharma')}
+                onClick={() => showToast(`Gentle notification sent to ${senior?.name || 'Shlok'}`)}
                 className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-bold shrink-0"
               >
                 Remind
@@ -198,7 +198,7 @@ export const FamilyDashboard: React.FC = () => {
               <span className="text-xs uppercase font-black tracking-wider text-slate-400 block">
                 {tFamily('familyDashboard.lastActivityRoom')}
               </span>
-              <span className="text-sm font-bold block truncate max-w-[180px]">
+              <span className="text-xs sm:text-sm font-bold block truncate max-w-[180px]">
                 {isMotionDetected ? tFamily('familyDashboard.roomMotionDetected') : tFamily('familyDashboard.noRecentMotion')}
               </span>
             </div>
@@ -208,16 +208,16 @@ export const FamilyDashboard: React.FC = () => {
 
       {/* WHATSAPP DEMO SIMULATOR BANNER */}
       {whatsAppMsg && (
-        <section className="bg-emerald-950/30 border-2 border-emerald-500/40 rounded-3xl p-5 shadow-lg space-y-3" aria-label="WhatsApp Simulation">
+        <section className="bg-emerald-950/30 border-2 border-emerald-500/40 rounded-3xl p-4 sm:p-5 shadow-lg space-y-3" aria-label="WhatsApp Simulation">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-emerald-600 text-white rounded-xl">
                 <MessageSquare className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-black text-emerald-900 flex items-center gap-2">
+                <h3 className="text-sm sm:text-base font-black text-emerald-900 flex items-center gap-2">
                   <span>{tFamily('familyDashboard.whatsAppDemoBadge')}</span>
-                  <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-bold">Meta Cloud API Ready</span>
+                  <span className="text-[10px] px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-bold">Meta Cloud API</span>
                 </h3>
                 <p className="text-xs text-emerald-700 font-medium">
                   Sent to {whatsAppMsg.recipientPhone} at {whatsAppMsg.timestamp}
@@ -233,25 +233,25 @@ export const FamilyDashboard: React.FC = () => {
             </a>
           </div>
 
-          <div className="bg-emerald-900/10 border border-emerald-500/30 rounded-2xl p-4 font-mono text-xs sm:text-sm text-slate-800 whitespace-pre-line leading-relaxed">
+          <div className="bg-emerald-900/10 border border-emerald-500/30 rounded-2xl p-3 sm:p-4 font-mono text-xs sm:text-sm text-slate-800 whitespace-pre-line leading-relaxed">
             {whatsAppMsg.messageText}
           </div>
         </section>
       )}
 
       {/* Tab Navigation */}
-      <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+      <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200">
         <button
           type="button"
           onClick={() => setActiveTab('stream')}
-          className={`flex-1 py-3 rounded-xl font-black text-sm sm:text-base flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-base flex items-center justify-center gap-1.5 transition-all ${
             activeTab === 'stream' ? 'bg-white text-slate-900 shadow-md' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Activity className="w-5 h-5 text-blue-600" />
+          <Activity className="w-4 h-4 text-blue-600" />
           <span>{tFamily('familyDashboard.recentActivity')}</span>
           {requests.filter(r => r.status === 'PENDING').length > 0 && (
-            <span className="px-2 py-0.5 bg-red-600 text-white rounded-full text-xs font-bold">
+            <span className="px-1.5 py-0.5 bg-red-600 text-white rounded-full text-[10px] font-bold">
               {requests.filter(r => r.status === 'PENDING').length}
             </span>
           )}
@@ -260,22 +260,22 @@ export const FamilyDashboard: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('device')}
-          className={`flex-1 py-3 rounded-xl font-black text-sm sm:text-base flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-base flex items-center justify-center gap-1.5 transition-all ${
             activeTab === 'device' ? 'bg-white text-slate-900 shadow-md' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Cpu className="w-5 h-5 text-purple-600" />
+          <Cpu className="w-4 h-4 text-purple-600" />
           <span>{tFamily('familyDashboard.deviceHealth')}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('contacts')}
-          className={`flex-1 py-3 rounded-xl font-black text-sm sm:text-base flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-base flex items-center justify-center gap-1.5 transition-all ${
             activeTab === 'contacts' ? 'bg-white text-slate-900 shadow-md' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <User className="w-5 h-5 text-emerald-600" />
+          <User className="w-4 h-4 text-emerald-600" />
           <span>{tFamily('familyDashboard.emergencyContactsList')}</span>
         </button>
       </div>
@@ -284,7 +284,7 @@ export const FamilyDashboard: React.FC = () => {
       {activeTab === 'stream' && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-black text-slate-900">
+            <h2 className="text-lg sm:text-xl font-black text-slate-900">
               {tFamily('familyDashboard.recentActivity')}
             </h2>
             <span className="text-xs text-slate-500 font-bold">
@@ -302,7 +302,7 @@ export const FamilyDashboard: React.FC = () => {
               return (
                 <div
                   key={req.id}
-                  className={`p-5 rounded-3xl border-2 transition-all space-y-4 shadow-sm ${
+                  className={`p-4 sm:p-5 rounded-3xl border-2 transition-all space-y-4 shadow-sm ${
                     isEmergency
                       ? 'border-red-500 bg-red-50'
                       : isResolved
@@ -315,7 +315,7 @@ export const FamilyDashboard: React.FC = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`text-xl font-black ${isEmergency ? 'text-red-700' : 'text-slate-900'}`}>
+                        <span className={`text-lg sm:text-xl font-black ${isEmergency ? 'text-red-700' : 'text-slate-900'}`}>
                           {reqText}
                         </span>
                         <span className="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase flex items-center gap-1 bg-white border border-slate-200 text-slate-700">
@@ -331,13 +331,13 @@ export const FamilyDashboard: React.FC = () => {
                             </>
                           )}
                         </span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-black ${
+                        <span className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-black ${
                           req.priority === 'EMERGENCY' ? 'bg-red-600 text-white' : 'bg-slate-200 text-slate-700'
                         }`}>
                           {req.priority}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-600 font-medium">
+                      <p className="text-xs sm:text-sm text-slate-600 font-medium">
                         {req.seniorName} • {new Date(req.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(req.timestamp).toLocaleDateString()}
                       </p>
                     </div>
@@ -393,7 +393,7 @@ export const FamilyDashboard: React.FC = () => {
 
       {/* TAB 2: DEVICE HEALTH & TELEMETRY */}
       {activeTab === 'device' && (
-        <section className="bg-white rounded-3xl p-6 shadow-md border-2 border-slate-200 space-y-6">
+        <section className="bg-white rounded-3xl p-5 sm:p-6 shadow-md border-2 border-slate-200 space-y-6">
           <div className="flex items-center justify-between border-b pb-4">
             <div>
               <h2 className="text-xl font-black text-slate-900">{device.name}</h2>
@@ -454,7 +454,7 @@ export const FamilyDashboard: React.FC = () => {
 
       {/* TAB 3: EMERGENCY PROTOCOL CONTACTS */}
       {activeTab === 'contacts' && (
-        <section className="bg-white rounded-3xl p-6 shadow-md border-2 border-slate-200 space-y-4">
+        <section className="bg-white rounded-3xl p-5 sm:p-6 shadow-md border-2 border-slate-200 space-y-4">
           <h2 className="text-xl font-black text-slate-900">
             {tFamily('familyDashboard.emergencyContactsList')}
           </h2>

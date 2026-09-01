@@ -15,8 +15,8 @@ export const PwaInstallBanner: React.FC = () => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/sw.js')
-        .then(() => {
-          // SW registered
+        .then((registration) => {
+          registration.update().catch(() => {});
         })
         .catch(() => {
           // SW registration failed

@@ -2,7 +2,16 @@
 
 import React from 'react';
 import { useSaathi } from '@/context/SaathiContext';
-import { Phone, AlertTriangle, X, ShieldAlert, HeartHandshake } from 'lucide-react';
+import { 
+  AlertTriangle, 
+  Phone, 
+  X, 
+  Siren, 
+  ShieldAlert, 
+  HeartHandshake, 
+  MessageSquare,
+  Volume2
+} from 'lucide-react';
 
 interface SosModalProps {
   isOpen: boolean;
@@ -10,102 +19,120 @@ interface SosModalProps {
 }
 
 export const SosModal: React.FC<SosModalProps> = ({ isOpen, onClose }) => {
-  const { tSenior, senior } = useSaathi();
+  const { senior, createRequest, tSenior, readAloud } = useSaathi();
 
   if (!isOpen) return null;
 
+  const SON_PHONE = '919619560729';
+
+  const handleTriggerEmergency = (type: string) => {
+    createRequest('EMERGENCY', 'APP');
+    const msg = `आपत्कालीन संदेश पाठवला आहे. मुलाला आणि काळजीवाहू व्यक्तीला त्वरित सतर्क करण्यात आले आहे.`;
+    readAloud(msg);
+  };
+
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-red-950/80 backdrop-blur-md animate-fade-in"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="sos-title"
     >
-      <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-4 border-red-600 space-y-6">
+      <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-4 border-red-500 space-y-6 animate-scale-up">
         {/* Header */}
-        <div className="flex items-start gap-4">
-          <div className="p-4 bg-red-100 rounded-2xl text-red-600 shrink-0">
-            <AlertTriangle className="w-10 h-10 animate-bounce" />
+        <div className="flex items-start justify-between border-b-2 border-red-100 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-red-600 text-white rounded-2xl animate-pulse">
+              <AlertTriangle className="w-8 h-8" />
+            </div>
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-black text-red-600">
+                आपत्कालीन मदत (SOS)
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 font-bold">
+                तुम्हाला लगेच मदत हवी आहे का?
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 id="sos-title" className="text-2xl sm:text-3xl font-black text-red-600 tracking-tight">
-              {tSenior('sos.modalTitle')}
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 mt-1 font-medium">
-              {tSenior('sos.modalSubtitle')}
-            </p>
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-full"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
 
-        {/* Emergency Dispatch Notice */}
-        <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 flex items-center gap-3">
-          <ShieldAlert className="w-6 h-6 text-red-600 shrink-0" />
-          <p className="text-red-900 font-bold text-base sm:text-lg">
-            {tSenior('sos.sosDispatched')}
-          </p>
-        </div>
-
-        {/* Call Buttons (High Contrast & Big Touch Targets) */}
-        <div className="grid gap-3 sm:gap-4">
-          {/* Call Family */}
+        {/* Big Action Buttons */}
+        <div className="space-y-3">
+          {/* 1. Call Son (Family) */}
           <a
-            href="tel:+919876543210"
-            className="flex items-center justify-between p-5 bg-blue-900 text-white rounded-2xl hover:bg-blue-800 transition-all font-bold text-xl sm:text-2xl shadow-md active:scale-98 border-2 border-blue-700"
-          >
-            <div className="flex items-center gap-4">
-              <HeartHandshake className="w-8 h-8 text-blue-300 shrink-0" />
-              <div className="text-left">
-                <span className="block">{tSenior('sos.callPrimaryCaregiver')}</span>
-                <span className="text-xs sm:text-sm text-blue-200 font-normal">{senior.primaryCaregiverPhone}</span>
-              </div>
-            </div>
-            <Phone className="w-7 h-7 text-emerald-300" />
-          </a>
-
-          {/* Call Ambulance */}
-          <a
-            href="tel:108"
-            className="flex items-center justify-between p-5 bg-red-600 text-white rounded-2xl hover:bg-red-700 transition-all font-bold text-xl sm:text-2xl shadow-md active:scale-98 border-2 border-red-500"
-          >
-            <div className="flex items-center gap-4">
-              <AlertTriangle className="w-8 h-8 text-yellow-300 shrink-0" />
-              <span>{tSenior('sos.callAmbulance')}</span>
-            </div>
-            <Phone className="w-7 h-7 text-yellow-300" />
-          </a>
-
-          {/* Call Senior Helpline */}
-          <a
-            href="tel:14567"
-            className="flex items-center justify-between p-5 bg-amber-600 text-white rounded-2xl hover:bg-amber-700 transition-all font-bold text-xl sm:text-2xl shadow-md active:scale-98 border-2 border-amber-500"
-          >
-            <div className="flex items-center gap-4">
-              <Phone className="w-8 h-8 text-amber-200 shrink-0" />
-              <span>{tSenior('sos.callSeniorHelpline')}</span>
-            </div>
-            <span className="text-lg bg-amber-800/60 px-3 py-1 rounded-xl">14567</span>
-          </a>
-
-          {/* Call Police */}
-          <a
-            href="tel:112"
-            className="flex items-center justify-between p-4 bg-slate-800 text-white rounded-2xl hover:bg-slate-700 transition-all font-bold text-lg sm:text-xl shadow-md active:scale-98"
+            href="tel:+919619560729"
+            onClick={() => handleTriggerEmergency('FAMILY_CALL')}
+            className="w-full p-4 sm:p-5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-xl sm:text-2xl flex items-center justify-between shadow-lg active:scale-97 transition-all border-2 border-red-500"
           >
             <div className="flex items-center gap-3">
-              <ShieldAlert className="w-7 h-7 text-slate-300 shrink-0" />
-              <span>{tSenior('sos.callPolice')}</span>
+              <Phone className="w-7 h-7 shrink-0" />
+              <div className="text-left">
+                <span className="block">मुलाला फोन करा (Call Son)</span>
+                <span className="text-xs font-bold text-red-100 block">+91 96195 60729</span>
+              </div>
             </div>
-            <span className="text-base bg-slate-700 px-3 py-1 rounded-xl">112</span>
+            <span className="text-sm font-black bg-red-800 px-3 py-1 rounded-xl">कॉल</span>
+          </a>
+
+          {/* 2. WhatsApp Family */}
+          <a
+            href={`https://wa.me/${SON_PHONE}?text=${encodeURIComponent('🚨 तातडीने मदत हवी आहे (EMERGENCY)! मला त्वरित फोन कर.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleTriggerEmergency('WHATSAPP')}
+            className="w-full p-4 sm:p-5 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-black text-xl sm:text-2xl flex items-center justify-between shadow-lg active:scale-97 transition-all border-2 border-green-500"
+          >
+            <div className="flex items-center gap-3">
+              <MessageSquare className="w-7 h-7 shrink-0 text-green-200" />
+              <div className="text-left">
+                <span className="block">व्हॉट्सॲपवर SOS पाठवा</span>
+                <span className="text-xs font-bold text-green-100 block">WhatsApp Emergency</span>
+              </div>
+            </div>
+            <span className="text-sm font-black bg-green-800 px-3 py-1 rounded-xl">मेसेज</span>
+          </a>
+
+          {/* 3. Ambulance 108 */}
+          <a
+            href="tel:108"
+            onClick={() => handleTriggerEmergency('AMBULANCE')}
+            className="w-full p-4 bg-rose-50 hover:bg-rose-100 text-rose-950 rounded-2xl font-black text-lg sm:text-xl flex items-center justify-between border-2 border-rose-300 active:scale-97 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <Siren className="w-6 h-6 text-rose-600 shrink-0" />
+              <span>रुग्णवाहिका (Ambulance - 108)</span>
+            </div>
+            <span className="text-xs font-bold bg-rose-200 px-3 py-1 rounded-xl text-rose-900">कॉल</span>
+          </a>
+
+          {/* 4. Police 112 */}
+          <a
+            href="tel:112"
+            onClick={() => handleTriggerEmergency('POLICE')}
+            className="w-full p-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-2xl font-black text-lg sm:text-xl flex items-center justify-between border-2 border-slate-300 active:scale-97 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <ShieldAlert className="w-6 h-6 text-slate-700 shrink-0" />
+              <span>पोलीस मदत (Police - 112)</span>
+            </div>
+            <span className="text-xs font-bold bg-slate-300 px-3 py-1 rounded-xl text-slate-800">कॉल</span>
           </a>
         </div>
 
-        {/* Cancel Button */}
+        {/* Dismiss Button */}
         <button
+          type="button"
           onClick={onClose}
-          className="w-full p-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-lg sm:text-xl flex items-center justify-center gap-2 border-2 border-slate-300 active:scale-98"
+          className="w-full py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-black rounded-2xl text-base active:scale-95 transition-all"
         >
-          <X className="w-6 h-6" />
-          {tSenior('sos.cancelSos')}
+          रद्द करा / मागे जा (Cancel)
         </button>
       </div>
     </div>

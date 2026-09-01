@@ -120,7 +120,7 @@ class DeviceService {
     requestService.createRequest(
       gesture.requestType,
       'HARDWARE',
-      'Raj Sharma',
+      'Shlok',
       `Triggered by ESP32 Flex Glove Gesture: ${gesture.requestType}`
     );
   }
@@ -140,7 +140,7 @@ class DeviceService {
       requestService.createRequest(
         matched.requestType,
         'HARDWARE',
-        'Raj Sharma',
+        'Shlok',
         `Recognized ESP32 Gesture: ${matched.requestType}`
       );
     }

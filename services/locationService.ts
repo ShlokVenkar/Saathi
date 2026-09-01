@@ -9,9 +9,9 @@ export interface UserCoordinates {
 }
 
 const DEFAULT_COORDS: UserCoordinates = {
-  latitude: 18.5074,
-  longitude: 73.8077,
-  locationName: 'Kothrud, Pune, Maharashtra',
+  latitude: 19.0222,
+  longitude: 72.8711,
+  locationName: 'Vidyalankar Campus, Wadala East, Antop Hill, Mumbai',
   isCustom: false
 };
 
